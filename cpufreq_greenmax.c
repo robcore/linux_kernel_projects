@@ -1205,7 +1205,7 @@ static struct attribute * greenmax_attributes[] = {
 	&awake_ideal_freq_attr.attr,
 	&suspend_ideal_freq_attr.attr,
 	&min_sampling_rate_attr.attr,
-	&powersave_bias.attr,
+	&powersave_bias.attr.attr,
 	NULL , };
 
 static struct attribute_group greenmax_attr_group = {
