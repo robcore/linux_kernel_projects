@@ -9,7 +9,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * A simple hotplugging driver optimized for Octa Core CPUs
+ * A simple hotplugging driver optimized for Quad Core CPUs
  */
 
 #include <linux/module.h>
@@ -26,7 +26,7 @@ static inline void cpus_online_all(void)
 {
 	unsigned int cpu;
 
-	for (cpu = 1; cpu < 8; cpu++) {
+	for (cpu = 1; cpu < 4; cpu++) {
 		if (cpu_is_offline(cpu))
 			cpu_up(cpu);
 	}
@@ -38,7 +38,7 @@ static inline void cpus_offline_all(void)
 {
 	unsigned int cpu;
 
-	for (cpu = 7; cpu > 0; cpu--) {
+	for (cpu = 3; cpu > 0; cpu--) {
 		if (cpu_online(cpu))
 			cpu_down(cpu);
 	}
@@ -83,6 +83,7 @@ static void __exit thunderplug_exit(void)
 
 MODULE_LICENSE("GPL and additional rights");
 MODULE_AUTHOR("Varun Chitre <varun.chitre15@gmail.com>");
-MODULE_DESCRIPTION("Hotplug driver for OctaCore CPU");
+MODULE_AUTHOR("Joe Maples <frap129@gmail.com>");
+MODULE_DESCRIPTION("Hotplug driver for Quad Core CPU");
 late_initcall(thunderplug_init);
 module_exit(thunderplug_exit);
