@@ -22,16 +22,27 @@
 
 #define AMPERAGE "amperage"
 #define MAXCORES 4
-#define POWERSAVE_CORES 0
+#define POWERSAVE_RATE 0
+
+static inline void powersave_cores(void)
+{ 
+	unsigned int cores;
+	unsigned int pluggable_cores;
+	
+	pluggable_cores = (MAXCORES - 1) * (1 / (100 - POWERSAVE_RATE);
+	cores = ceil(pluggable_cores);
+	
+	pr_info("%s: calculated cores to plug\n", AMPERAGE);
+}
 
 static inline void cpus_online(void)
 {
-		unsigned int cpu;
-		unsigned int cores;
+	unsigned int cpu;
+	powersave_cores();
 
-	for (cpu = 1; cores= cpu - POWERSAVE_CORES; cpu < MAXCORES; cpu++) {
+	for (cpu = MAXCORES - 1; cpu < MAXCORES; cpu++) {
 		if (cpu_is_offline(cpu))
-			if (POWERSAVE_CORES != 0; POWERSAVE_CORES !> MAXCORES)
+			if (POWERSAVE_RATE > 0; POWERSAVE_RATE !> 100)
 				cpu_up(cores);
 			else
 				cpu_up(cpu);
