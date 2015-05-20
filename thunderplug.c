@@ -21,12 +21,13 @@
 #include <linux/cpufreq.h>
 
 #define THUNDERPLUG "thunderplug"
+#define MAXCORES 4
 
 static inline void cpus_online_all(void)
 {
 	unsigned int cpu;
 
-	for (cpu = 1; cpu < 4; cpu++) {
+	for (cpu = 1; cpu < MAXCORES; cpu++) {
 		if (cpu_is_offline(cpu))
 			cpu_up(cpu);
 	}
@@ -38,7 +39,7 @@ static inline void cpus_offline_all(void)
 {
 	unsigned int cpu;
 
-	for (cpu = 3; cpu > 0; cpu--) {
+	for (cpu = MAXCORES - 1; cpu > 0; cpu--) {
 		if (cpu_online(cpu))
 			cpu_down(cpu);
 	}
