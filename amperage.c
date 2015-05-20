@@ -24,19 +24,7 @@
 #define MAXCORES 4
 #define POWERSAVE_CORES 0
 
-static inline void cpus_online_all(void)
-{
-	unsigned int cpu;
-
-	for (cpu = 1; cpu < MAXCORES; cpu++) {
-		if (cpu_is_offline(cpu))
-			cpu_up(cpu);
-	}
-
-	pr_info("%s: all cpus were onlined\n", AMPERAGE);
-}
-
-static inline void cpus_online_powersave(void)
+static inline void cpus_online(void)
 {
 		unsigned int cpu;
 		unsigned int cores;
@@ -77,7 +65,7 @@ static void amperage_suspend(struct power_suspend *h)
 
 static void __ref amperage_resume(struct power_suspend *h)
 {
-	cpus_online_powersave();
+	cpus_online();
 
 	pr_info("%s: resume\n", AMPERAGE);
 }
