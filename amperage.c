@@ -27,6 +27,7 @@
 #define DEF_MAX_CPUS_ONLINE 	4
 #define DEF_PLUG_PERCENT	100
 #define DEF_ENABLE_POWERSAVE	1
+#define DEF_PLUGGING_THRESHOLD	1497000
 
 /* Set Tunables */
 static struct hotplug_tunables {
@@ -44,28 +45,28 @@ static struct hotplug_tunables {
 static inline void powersave_cores(void)
 { 
 	unsigned int cores;
+	unsigned int cpu;
 	unsigned int pluggable_cores;
 	
-	if (tunables.enable_powersave = 1){
+	if (tunables.enable_powersave == 1){
 		/* Powersave Algorithm */
-		pluggable_cores = (MAXCORES - 1) * (1 / (100 - tunables.plugging_rate);
-		cores = ceil(pluggable_cores);
-		pr_info("%s: calculated cores to plug\n", AMPERAGE);
+		if ((tunables.plugging_rate > 0) && (tunables.plugging_rate !> 100)) {
+			pluggable_cores = (MAXCORES - 1) * (1 / (100 - tunables.plugging_rate);
+			cores = ceil(pluggable_cores);
+			pr_info("%s: calculated cores to plug\n", AMPERAGE);
+		}
+	} else {
+		cores = cpu;
 	}
 }
 
 static inline void cpus_online(void)
 {
-	unsigned int cpu;
 	powersave_cores();
 
 	for (cpu = MAXCORES - 1; cpu < MAXCORES; cpu++) {
 		if (cpu_is_offline(cores)){
-			if (tunables.plugging_rate > 0; tunables.plugging_rate !> 100){
-				cpu_up(cores);
-			} else {
-				cpu_up(cpu);
-			}
+			cpu_up(cores);
 		}
 	}
 
@@ -74,7 +75,6 @@ static inline void cpus_online(void)
 
 static inline void cpus_offline_all(void)
 {
-	unsigned int cpu;
 	powersave_cores();
 
 	for (cpu = MAXCORES - 1; cpu > 0; cpu--) {
