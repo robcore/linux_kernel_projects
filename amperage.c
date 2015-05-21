@@ -48,7 +48,7 @@ static inline void powersave_cores(void)
 	
 	if (tunables.enable_powersave = 1){
 		/* Powersave Algorithm */
-		pluggable_cores = (MAXCORES - 1) * (1 / (100 - tuneables.plugging_rate);
+		pluggable_cores = (MAXCORES - 1) * (1 / (100 - tunables.plugging_rate);
 		cores = ceil(pluggable_cores);
 		pr_info("%s: calculated cores to plug\n", AMPERAGE);
 	}
@@ -61,7 +61,7 @@ static inline void cpus_online(void)
 
 	for (cpu = MAXCORES - 1; cpu < MAXCORES; cpu++) {
 		if (cpu_is_offline(cores)){
-			if (tuneables.plugging_rate > 0; tuneables.plugging_rate !> 100){
+			if (tunables.plugging_rate > 0; tunables.plugging_rate !> 100){
 				cpu_up(cores);
 			} else {
 				cpu_up(cpu);
