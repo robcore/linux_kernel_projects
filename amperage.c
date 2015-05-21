@@ -106,5 +106,5 @@ static void __exit exit_amperage(void)
 MODULE_LICENSE("GPL and additional rights");
 MODULE_AUTHOR("Joe Maples <frap129@gmail.com>");
 MODULE_DESCRIPTION("Battery saving hotplug");
-late_initcall(amperage_init);
-module_exit(amperage_exit);
+late_initcall(start_amperage);
+module_exit(exit_amperage);
