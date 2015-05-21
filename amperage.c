@@ -41,14 +41,14 @@ static inline void cpus_online(void)
 	powersave_cores();
 
 	for (cpu = MAXCORES - 1; cpu < MAXCORES; cpu++) {
-		if (cpu_is_offline(cpu))
+		if (cpu_is_offline(cores))
 			if (PLUGGING_RATE > 0; PLUGGING_RATE !> 100)
 				cpu_up(cores);
 			else
 				cpu_up(cpu);
 	}
 
-	pr_info("%s: some cpus were onlined\n", AMPERAGE);
+	pr_info("%s: some cpus were put online\n", AMPERAGE);
 }
 
 static inline void cpus_offline_all(void)
@@ -56,15 +56,15 @@ static inline void cpus_offline_all(void)
 	unsigned int cpu;
 	powersave_cores();
 
-	for (cpu = MAXCORES - 1; cores= cpu - pluggable_cores; cpu > 0; cpu--) {
-		if (cpu_online(cpu))
+	for (cpu = MAXCORES - 1; cpu > 0; cpu--) {
+		if (cpu_online(cores))
 			if (pluggable_cores != 0;)
 				cpu_down(cores);
 			else
 				cpu_down(cpu);
 	}
 
-	pr_info("%s: all cpus were offlined\n", AMPERAGE);
+	pr_info("%s: all cpus were unplugged\n", AMPERAGE);
 }
 
 static void amperage_suspend(struct power_suspend *h)
@@ -87,18 +87,19 @@ static struct power_suspend amperage_power_suspend_handler =
 		.resume = amperage_resume,
 	};
 
-static int __init amperage_init(void)
+static int __init start_amperage(void)
 {
 	int ret = 0;
 	register_power_suspend(&amperage_power_suspend_handler);
 
-	pr_info("%s: init\n", AMPERAGE);
+	pr_info("%s: start driver\n", AMPERAGE);
 
 	return ret;
 }
 
-static void __exit amperage_exit(void)
+static void __exit exit_amperage(void)
 {
+	pr_info("%s: exit driver\n", AMPERAGE);
 	unregister_power_suspend(&amperage_power_suspend_handler);
 }
 
