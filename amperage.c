@@ -26,21 +26,69 @@
 #define DEF_MIN_CPUS_ONLINE	1
 #define DEF_MAX_CPUS_ONLINE 	4
 #define DEF_PLUG_PERCENT	100
-#define DEF_ENABLE_POWERSAVE	1
 #define DEF_PLUGGING_THRESHOLD	1497000
+#define DEF_ENABLE_POWERSAVE	1
+#define DEF_MINMAX_MODE		1
 
 /* Set Tunables */
 static struct hotplug_tunables {
 	unsigned int min_cpus;
 	unsigned int max_cpus;
 	unsigned int plugging_rate;
+	unsigned int plugging_threshold;
 	unsigned int enable_powersave;
+	unsigned int minmax_mode;
 } tunables = {
 	.min_cpus = DEF_MIN_CPUS_ONLINE,
 	.max_cpus = DEF_MAX_CPUS_ONLINE,
 	.plugging_rate = DEF_PLUG_PERCENT,
+	.plugging_threshold = DEF_PLUGGING_THRESHOLD,
 	.enable_powersave = DEF_ENABLE_POWERSAVE,
+	.minmax_mode = DEF_MINMAX_MODE,
 };
+
+static unsigned long get_freq1(int cpu = 0) {
+	return cpufreq1_get(cpu);
+}
+
+static unsigned long get_freq2(int cpu = 1) {
+	return cpufreq2_get(cpu);
+}
+
+static unsigned long get_freq3(int cpu = 2) {
+	return cpufreq3_get(cpu);
+}
+
+static inline void plug_one_cpu(void)]
+{
+	get_freq1();
+	get_freq2();
+	get_freq3();
+	
+	for (cpu = 1; cpu++) {
+		if (cpu_is_offline(cpu)){
+			if (cpufreq1_get >= tunables.plugging_threshold){
+				cpu_up(cpu);
+			}
+		}
+	}
+	
+	for (cpu = 2; cpu++) {
+		if (cpu_is_offline(cpu)){
+			if (cpufreq2_get >= tunables.plugging_threshold){
+				cpu_up(cpu);
+			}
+		}
+	}
+	
+	for (cpu = 3; cpu++) {
+		if (cpu_is_offline(cpu)){
+			if (cpufreq3_get >= tunables.plugging_threshold){
+				cpu_up(cpu);
+			}
+		}
+	}
+}
 
 static inline void powersave_cores(void)
 { 
@@ -58,13 +106,14 @@ static inline void powersave_cores(void)
 	} else {
 		cores = cpu;
 	}
+	return core
 }
 
 static inline void cpus_online(void)
 {
 	powersave_cores();
 
-	for (cpu = MAXCORES - 1; cpu < MAXCORES; cpu++) {
+	for (cpu = 1; cpu <= MAXCORES; cpu++) {
 		if (cpu_is_offline(cores)){
 			cpu_up(cores);
 		}
@@ -99,7 +148,12 @@ static void amperage_suspend(struct power_suspend *h)
 
 static void __ref amperage_resume(struct power_suspend *h)
 {
-	cpus_online();
+	if (tunables.minmax_mode != 1)
+	{
+		plug_one_cpu();
+	} else {
+		cpus_online();
+	}
 
 	pr_info("%s: resume\n", AMPERAGE);
 }
