@@ -20,19 +20,38 @@
 #include <linux/powersuspend.h>
 #include <linux/cpufreq.h>
 
-#define AMPERAGE "amperage"
-#define MAXCORES 4
-#define PLUGGING_RATE 100
+/* Default Tunable Values */
+#define AMPERAGE		"amperage"
+#define MAXCORES 		4
+#define DEF_MIN_CPUS_ONLINE	1
+#define DEF_MAX_CPUS_ONLINE 	4
+#define DEF_PLUG_PERCENT	100
+#define DEF_ENABLE_POWERSAVE	1
+
+/* Set Tunables */
+static struct hotplug_tunables {
+	unsigned int min_cpus;
+	unsigned int max_cpus;
+	unsigned int plugging_rate;
+	unsigned int enable_powersave;
+} tunables = {
+	.min_cpus = DEF_MIN_CPUS_ONLINE,
+	.max_cpus = DEF_MAX_CPUS_ONLINE,
+	.plugging_rate = DEF_PLUG_PERCENT,
+	.enable_powersave = DEF_ENABLE_POWERSAVE,
+};
 
 static inline void powersave_cores(void)
 { 
 	unsigned int cores;
 	unsigned int pluggable_cores;
 	
-	pluggable_cores = (MAXCORES - 1) * (1 / (100 - PLUGGING_RATE);
-	cores = ceil(pluggable_cores);
-	
-	pr_info("%s: calculated cores to plug\n", AMPERAGE);
+	if (tunables.enable_powersave = 1){
+		/* Powersave Algorithm */
+		pluggable_cores = (MAXCORES - 1) * (1 / (100 - tuneables.plugging_rate);
+		cores = ceil(pluggable_cores);
+		pr_info("%s: calculated cores to plug\n", AMPERAGE);
+	}
 }
 
 static inline void cpus_online(void)
@@ -41,11 +60,13 @@ static inline void cpus_online(void)
 	powersave_cores();
 
 	for (cpu = MAXCORES - 1; cpu < MAXCORES; cpu++) {
-		if (cpu_is_offline(cores))
-			if (PLUGGING_RATE > 0; PLUGGING_RATE !> 100)
+		if (cpu_is_offline(cores)){
+			if (tuneables.plugging_rate > 0; tuneables.plugging_rate !> 100){
 				cpu_up(cores);
-			else
+			} else {
 				cpu_up(cpu);
+			}
+		}
 	}
 
 	pr_info("%s: some cpus were put online\n", AMPERAGE);
@@ -57,11 +78,13 @@ static inline void cpus_offline_all(void)
 	powersave_cores();
 
 	for (cpu = MAXCORES - 1; cpu > 0; cpu--) {
-		if (cpu_online(cores))
-			if (pluggable_cores != 0;)
+		if (cpu_online(cores)){
+			if (pluggable_cores != 0;){
 				cpu_down(cores);
-			else
+			} else {
 				cpu_down(cpu);
+			}
+		}
 	}
 
 	pr_info("%s: all cpus were unplugged\n", AMPERAGE);
